@@ -73,14 +73,11 @@ func goDotEnvVariable(key string) string {
 func main() {
 	flag.Parse()
 
+	configureLog()
+
 	appVersion := goDotEnvVariable("VERSION")
 
-	if *ver {
-		fmt.Printf("\nVersion:   %s\n\n", appVersion)
-		os.Exit(0)
-	}
-
-	configureLog()
+	log.Info("Version: ", appVersion)
 
 	c, err := loadConfig()
 	if err != nil {
