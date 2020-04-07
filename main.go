@@ -77,6 +77,8 @@ func main() {
 
 	appVersion := goDotEnvVariable("VERSION")
 
+	log.Info("Welcome to Mikrotik Prometheus Exporter")
+
 	log.Info("Version: ", appVersion)
 
 	c, err := loadConfig()
