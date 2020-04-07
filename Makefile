@@ -29,7 +29,7 @@ deploy: utils
 	@ghr -t ${GITHUB_TOKEN} -u ${USERNAME} -r ${REPONAME} -replace ${VERSION} dist/
 	@echo Done !
 
-dockerhub: deploy
+dockerhub:
 	@docker login -u ${USERNAME} -p ${DOCKER_TOKEN}
-	@docker build -t ${USERNAME}/${REPONAME}:${VERSION} .
-	@docker push ${USERNAME}/${REPONAME}:${VERSION}
+	docker build -t ${USERNAME}/${REPONAME}:${VERSION} .
+	docker push ${USERNAME}/${REPONAME}:${VERSION}
