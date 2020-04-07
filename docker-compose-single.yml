@@ -9,6 +9,6 @@ services:
       - DEVICE=home
       - ADDRESS=192.168.1.4
       - USER=prometheus
-      - PASSWORD=admin
+      - PASSWORD=changeme
     ports:
       - 9436:9436
