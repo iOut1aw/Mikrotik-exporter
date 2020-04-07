@@ -3,6 +3,7 @@ module mikrotik-exporter
 go 1.14
 
 require (
+	github.com/joho/godotenv v1.3.0
 	github.com/miekg/dns v1.1.22
 	github.com/mitchellh/gox v1.0.1 // indirect
 	github.com/prometheus/client_golang v1.2.1

@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"os"
 
+	"github.com/joho/godotenv"
 	"github.com/prometheus/common/version"
 
 	"fmt"
@@ -52,20 +53,30 @@ var (
 	withIpsec   = flag.Bool("with-ipsec", false, "retrieves ipsec metrics")
 
 	cfg *config.Config
-
-	appVersion = "1.0"
-	shortSha   = "0xDEADBEEF"
 )
 
 func init() {
 	prometheus.MustRegister(version.NewCollector("mikrotik_exporter"))
 }
 
+func goDotEnvVariable(key string) string {
+	err := godotenv.Load(".env")
+  
+	if err != nil {
+	  log.Fatalf("Error loading .env file")
+	}
+
+	return os.Getenv(key)
+  }
+  
+
 func main() {
 	flag.Parse()
 
+	appVersion := goDotEnvVariable("VERSION")
+
 	if *ver {
-		fmt.Printf("\nVersion:   %s\nShort SHA: %s\n\n", appVersion, shortSha)
+		fmt.Printf("\nVersion:   %s\n\n", appVersion)
 		os.Exit(0)
 	}
 
