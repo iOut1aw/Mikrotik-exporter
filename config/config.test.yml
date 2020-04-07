@@ -1,12 +1,12 @@
 devices:
-  - name: test1
+  - name: home
     address: 192.168.1.1
     user: foo
     password: bar
-  - name: test2
+  - name: company
     address: 192.168.2.1
     user: test
-    password: 123
+    password: 1234
 
 features:
   bgp: true
