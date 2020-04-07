@@ -1,23 +1,35 @@
-# go run -ldflags "-X mikrotik-exporter/cmd.version=6.6.7-BETA -X mikrotik-exporter/cmd.shortSha=`git rev-parse HEAD`" main.go version
+include .env
 
-VERSION=`cat VERSION`
 SHORTSHA=`git rev-parse --short HEAD`
 
-LDFLAGS=-X main.appVersion=$(VERSION)
+LDFLAGS=-X main.appVersion=${VERSION}
 LDFLAGS+=-X main.shortSha=$(SHORTSHA)
 
+info:
+	@echo Version = ${VERSION}
+	@echo Username = ${USERNAME}
+	@echo Repository = ${REPONAME}
+	@echo Github Token = ${GITHUB_TOKEN}
+	@echo Docker Token = ${DOCKER_TOKEN}
+	@echo LDFLAGS = $(LDFLAGS)
+
 build:
+	$(info Build application ...)
 	go build -ldflags "$(LDFLAGS)" .
 
 utils:
+	$(info Install tools ...)
 	go get github.com/mitchellh/gox
 	go get github.com/tcnksm/ghr
 
 deploy: utils
+	$(info Build packages ...)
 	CGO_ENABLED=0 gox -os="linux" -arch="amd64" -parallel=4 -ldflags "$(LDFLAGS)" -output "dist/mikrotik-exporter_{{.OS}}_{{.Arch}}"
-	@ghr -t $(GITHUB_TOKEN) -u $(CIRCLE_PROJECT_USERNAME) -r $(CIRCLE_PROJECT_REPONAME) -replace $(VERSION) dist/
+	$(info Create release ...)
+	@ghr -t ${GITHUB_TOKEN} -u ${USERNAME} -r ${REPONAME} -replace ${VERSION} dist/
+	$(info Done !)
 
 dockerhub: deploy
-	@docker login -u $(DOCKER_USER) -p $(DOCKER_PASS)
-	docker build -t $(CIRCLE_PROJECT_USERNAME)/$(CIRCLE_PROJECT_REPONAME):$(VERSION) .
-	docker push $(CIRCLE_PROJECT_USERNAME)/$(CIRCLE_PROJECT_REPONAME):$(VERSION)
+	@docker login -u ${USERNAME} -p ${DOCKER_TOKEN}
+	docker build -t ${USERNAME}/${REPONAME}:${VERSION} .
+	docker push ${USERNAME}/${REPONAME}:${VERSION}
