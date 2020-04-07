@@ -14,22 +14,22 @@ info:
 	@echo LDFLAGS = $(LDFLAGS)
 
 build:
-	$(info Build application ...)
-	go build -ldflags "$(LDFLAGS)" .
+	@echo Build application ...
+	@go build -ldflags "$(LDFLAGS)" .
 
 utils:
-	$(info Install tools ...)
-	go get github.com/mitchellh/gox
-	go get github.com/tcnksm/ghr
+	@echo Install tools ...
+	@go get github.com/mitchellh/gox
+	@go get github.com/tcnksm/ghr
 
 deploy: utils
-	$(info Build packages ...)
-	CGO_ENABLED=0 gox -os="linux" -arch="amd64" -parallel=4 -ldflags "$(LDFLAGS)" -output "dist/mikrotik-exporter_{{.OS}}_{{.Arch}}"
-	$(info Create release ...)
+	@echo Build packages ...
+	@CGO_ENABLED=0 gox -os="linux" -arch="amd64" -parallel=4 -ldflags "$(LDFLAGS)" -output "dist/mikrotik-exporter_{{.OS}}_{{.Arch}}"
+	@echo Create release ...
 	@ghr -t ${GITHUB_TOKEN} -u ${USERNAME} -r ${REPONAME} -replace ${VERSION} dist/
-	$(info Done !)
+	@echo Done !
 
 dockerhub: deploy
 	@docker login -u ${USERNAME} -p ${DOCKER_TOKEN}
-	docker build -t ${USERNAME}/${REPONAME}:${VERSION} .
-	docker push ${USERNAME}/${REPONAME}:${VERSION}
+	@docker build -t ${USERNAME}/${REPONAME}:${VERSION} .
+	@docker push ${USERNAME}/${REPONAME}:${VERSION}
