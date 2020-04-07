@@ -1,0 +1,7 @@
+.git
+.circleci
+.gitignore
+docker-*
+config.yml
+.env
+mikrotik-exporter*
