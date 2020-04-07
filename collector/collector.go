@@ -175,7 +175,7 @@ type Option func(*collector)
 func NewCollector(cfg *config.Config, opts ...Option) (prometheus.Collector, error) {
 	log.WithFields(log.Fields{
 		"numDevices": len(cfg.Devices),
-	}).Info("setting up collector for devices")
+	}).Info("Setting up collector for devices")
 
 	c := &collector{
 		devices: cfg.Devices,
