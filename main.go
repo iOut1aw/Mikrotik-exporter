@@ -6,7 +6,6 @@ import (
 	"io/ioutil"
 	"os"
 
-	"github.com/joho/godotenv"
 	"github.com/prometheus/common/version"
 
 	"fmt"
@@ -59,27 +58,14 @@ func init() {
 	prometheus.MustRegister(version.NewCollector("mikrotik_exporter"))
 }
 
-func goDotEnvVariable(key string) string {
-	err := godotenv.Load(".env")
-  
-	if err != nil {
-	  log.Fatalf("Error loading .env file")
-	}
-
-	return os.Getenv(key)
-  }
-  
-
 func main() {
 	flag.Parse()
 
 	configureLog()
 
-	appVersion := goDotEnvVariable("VERSION")
-
 	log.Info("Welcome to Mikrotik Prometheus Exporter")
 
-	log.Info("Version: ", appVersion)
+	log.Info("Version: 1.1")
 
 	c, err := loadConfig()
 	if err != nil {
