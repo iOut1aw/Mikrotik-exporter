@@ -148,6 +148,7 @@ features:
 - [ ] Test IPv6
 - [ ] Other architectures ( Arm, Arm64, 386 )
 - [ ] Extra OS support ( FreeBSD, NetBSD )
+- [ ] Create Docker Swarm example
 - [ ] Create Kubernetes example
 - [ ] Create specific Grafana dashboard
 
