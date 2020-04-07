@@ -6,8 +6,8 @@ services:
     container_name: mikrotik-exporter
     restart: unless-stopped
     volumes:
-      - ./config.yml:/app/mikrotik-exporter/config.yml
+      - ./config.yml:/app/config.yml
     environment:
-      - CONFIG_FILE=/app/mikrotik-exporter/config.yml
+      - CONFIG_FILE=/app/config.yml
     ports:
       - 9436:9436
