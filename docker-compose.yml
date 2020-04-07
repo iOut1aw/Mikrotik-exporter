@@ -1,0 +1,13 @@
+version: "2"
+
+services:
+  exporter:
+    image: hatamiarash7/mikrotik-exporter:1.2
+    container_name: mikrotik-exporter
+    restart: unless-stopped
+    volumes:
+      - ./config.yml:/app/mikrotik-exporter/config.yml
+    environment:
+      - CONFIG_FILE=/app/mikrotik-exporter/config.yml
+    ports:
+      - 9436:9436
