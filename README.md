@@ -71,6 +71,10 @@ docker-compose up -d
 
 Open [http://localhost:9436/metrics](http://localhost:9436/metrics)
 
+## Dashboard
+
+You can [Mikrotik Dashboard - Prometheus](https://grafana.com/grafana/dashboards/12055)
+
 ## Configure
 
 There is some options and features that you can use them to configure your devices.  
@@ -150,7 +154,7 @@ features:
 - [ ] Extra OS support ( FreeBSD, NetBSD )
 - [ ] Create Docker Swarm example
 - [ ] Create Kubernetes example
-- [ ] Create specific Grafana dashboard
+- [x] Create specific Grafana dashboard
 
 ## Support
 
