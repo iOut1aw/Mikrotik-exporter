@@ -73,7 +73,7 @@ Open [http://localhost:9436/metrics](http://localhost:9436/metrics)
 
 ## Dashboard
 
-You can [Mikrotik Dashboard - Prometheus](https://grafana.com/grafana/dashboards/12055)
+Use this one : [Mikrotik Dashboard - Prometheus](https://grafana.com/grafana/dashboards/12055)
 
 ## Configure
 
