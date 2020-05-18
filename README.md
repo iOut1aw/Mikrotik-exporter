@@ -21,6 +21,8 @@ There is a simple Docker image that you can use it on your host / stack :
 
 ```bash
 docker pull hatamiarash7/mikrotik-exporter:1.2
+// or
+docker pull registry.gitlab.com/hatamiarash7/mikrotik-exporter:1.2
 ```
 
 ## Run
