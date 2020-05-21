@@ -77,6 +77,9 @@ Open [http://localhost:9436/metrics](http://localhost:9436/metrics)
 
 Use this one : [Mikrotik Dashboard - Prometheus](https://grafana.com/grafana/dashboards/12055)
 
+![image](https://grafana.com/api/dashboards/12055/images/7865/image)
+![image](https://grafana.com/api/dashboards/12055/images/7864/image)
+
 ## Configure
 
 There is some options and features that you can use them to configure your devices.  
