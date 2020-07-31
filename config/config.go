@@ -47,7 +47,7 @@ type DnsServer struct {
 	Port    int    `yaml:"port"`
 }
 
-// Load reads YAML from reader and unmashals in Config
+// Load reads YAML from reader and unmarshals in Config
 func Load(r io.Reader) (*Config, error) {
 	b, err := ioutil.ReadAll(r)
 	if err != nil {
