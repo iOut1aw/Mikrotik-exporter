@@ -1,6 +1,6 @@
 # Mikrotik Prometheus Exporter
 
-[![GitHub license](https://img.shields.io/github/license/hatamiarash7/Mikrotik-Exporter)](https://github.com/hatamiarash7/Mikrotik-Exporter/blob/master/LICENSE) ![Docker Image Size (latest by date)](https://img.shields.io/docker/image-size/hatamiarash7/mikrotik-exporter) ![Docker Image Version (latest by date)](https://img.shields.io/docker/v/hatamiarash7/mikrotik-exporter?sort=date)
+![Go](https://github.com/hatamiarash7/Mikrotik-Exporter/workflows/Go/badge.svg?branch=master) [![GitHub license](https://img.shields.io/github/license/hatamiarash7/Mikrotik-Exporter)](https://github.com/hatamiarash7/Mikrotik-Exporter/blob/master/LICENSE) ![Docker Image Size (latest by date)](https://img.shields.io/docker/image-size/hatamiarash7/mikrotik-exporter) ![Docker Image Version (latest by date)](https://img.shields.io/docker/v/hatamiarash7/mikrotik-exporter?sort=date)
 
 ![banner](banner.jpg)
 
@@ -21,6 +21,8 @@ There is a simple Docker image that you can use it on your host / stack :
 
 ```bash
 docker pull hatamiarash7/mikrotik-exporter:1.2
+// or
+docker pull registry.gitlab.com/hatamiarash7/mikrotik-exporter:1.2
 ```
 
 ## Run
@@ -73,7 +75,10 @@ Open [http://localhost:9436/metrics](http://localhost:9436/metrics)
 
 ## Dashboard
 
-You can [Mikrotik Dashboard - Prometheus](https://grafana.com/grafana/dashboards/12055)
+Use this one : [Mikrotik Dashboard - Prometheus](https://grafana.com/grafana/dashboards/12055)
+
+![image](https://grafana.com/api/dashboards/12055/images/7865/image)
+![image](https://grafana.com/api/dashboards/12055/images/7864/image)
 
 ## Configure
 
