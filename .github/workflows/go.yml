@@ -50,5 +50,5 @@ jobs:
         run: |
           go get github.com/mitchellh/gox
           go get github.com/tcnksm/ghr
-          gox -os="linux" -arch="amd64" -parallel=4 -ldflags "${{ env.LDFLAGS }}" -output "dist/mikrotik-exporter_{{.OS}}_{{.Arch}}"
+          gox -os="linux freebsd netbsd" -arch="amd64 arm arm64 386" -parallel=4 -ldflags "${{ env.LDFLAGS }}" -output "dist/mikrotik-exporter_{{.OS}}_{{.Arch}}"
           ghr -t ${{ github.token }} -u ${{ github.actor }} -r Mikrotik-Exporter -replace ${{ steps.version_env.outputs.version }} dist/

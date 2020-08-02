@@ -155,8 +155,8 @@ features:
 ## To-Do
 
 - [ ] Test IPv6
-- [ ] Other architectures ( Arm, Arm64, 386 )
-- [ ] Extra OS support ( FreeBSD, NetBSD )
+- [x] Other architectures ( Arm, Arm64, 386 )
+- [x] Extra OS support ( FreeBSD, NetBSD )
 - [ ] Create Docker Swarm example
 - [ ] Create Kubernetes example
 - [x] Create specific Grafana dashboard
