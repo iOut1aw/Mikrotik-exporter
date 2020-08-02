@@ -1,4 +1,5 @@
 include .env
+include .version
 
 SHORTSHA=`git rev-parse --short HEAD`
 
