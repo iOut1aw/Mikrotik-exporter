@@ -41,4 +41,4 @@ jobs:
       - name: Build
         env:
           LDFLAGS: "-X main.appVersion=${{ steps.version_env.outputs.version }} -X main.shortSha=${{ steps.sha.outputs.sha_short }}"
-        run: go build -v -ldflags ${{ env.LDFLAGS }} .
+        run: go build -v -ldflags="${{ env.LDFLAGS }}" .
