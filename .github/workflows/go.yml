@@ -42,3 +42,13 @@ jobs:
         env:
           LDFLAGS: "-X main.appVersion=${{ steps.version_env.outputs.version }} -X main.shortSha=${{ steps.sha.outputs.sha_short }}"
         run: go build -v -ldflags="${{ env.LDFLAGS }}" .
+
+      - name: Publish
+        env:
+          CGO_ENABLED: 0
+          LDFLAGS: "-X main.appVersion=${{ steps.version_env.outputs.version }} -X main.shortSha=${{ steps.sha.outputs.sha_short }}"
+        run: |
+          go get github.com/mitchellh/gox
+          go get github.com/tcnksm/ghr
+          gox -os="linux" -arch="amd64" -parallel=4 -ldflags "${{ env.LDFLAGS }}" -output "dist/mikrotik-exporter_{{.OS}}_{{.Arch}}"
+          ghr -t ${{ github.token }} -u ${{ github.actor }} -r Mikrotik-Exporter -replace ${{ steps.version_env.outputs.version }} dist/
