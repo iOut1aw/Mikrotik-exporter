@@ -28,16 +28,17 @@ jobs:
               dep ensure
           fi
 
-      - name: Define variables
-        run: |
-          echo ".version" > VERSION_FILE
-          cat $(cat VERSION_FILE) | grep VERSION= | head -n 1 | grep -o '".*"' | sed 's/"//g' > VERSION
-
       - name: Set SHORTSHA
         id: sha
         run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
 
+      - name: Read version
+        id: version_env
+        uses: falti/dotenv-action@v0.2.4
+        with:
+          path: .version
+
       - name: Build
         env:
-          LDFLAGS: "-X main.appVersion=$(cat VERSION) -X main.shortSha=${{ steps.sha.outputs.sha_short }}"
-        run: go build -v -ldflags ${LDFLAGS} .
+          LDFLAGS: "-X main.appVersion=${{ steps.version_env.outputs.version }} -X main.shortSha=${{ steps.sha.outputs.sha_short }}"
+        run: go build -v -ldflags ${{ env.LDFLAGS }} .
