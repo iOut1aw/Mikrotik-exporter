@@ -3,14 +3,13 @@ name: Go
 on:
   push:
     branches: [master]
-    paths-ignore:
-      - "README.md"
   pull_request:
     branches: [master]
 
 jobs:
   build:
     name: Build
+    if: "!contains(github.event.head_commit.message, '[skip-ci]')"
     runs-on: ubuntu-latest
     steps:
       - name: Setup Go
@@ -52,5 +51,5 @@ jobs:
         run: |
           go get github.com/mitchellh/gox
           go get github.com/tcnksm/ghr
-          gox -os="linux freebsd netbsd" -arch="amd64 arm arm64 386" -parallel=4 -ldflags "${{ env.LDFLAGS }}" -output "dist/mikrotik-exporter_{{.OS}}_{{.Arch}}"
+          gox -os="linux freebsd netbsd" -arch="amd64 arm arm64 386" -parallel=8 -ldflags "${{ env.LDFLAGS }}" -output "dist/mikrotik-exporter_{{.OS}}_{{.Arch}}"
           ghr -t ${{ github.token }} -u ${{ github.actor }} -r Mikrotik-Exporter -replace ${{ steps.version_env.outputs.version }} dist/
