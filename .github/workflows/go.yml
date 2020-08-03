@@ -79,6 +79,12 @@ jobs:
         run: ls -R
         working-directory: dist/
 
+      - name: Read version
+        id: version_env
+        uses: falti/dotenv-action@v0.2.4
+        with:
+          path: .version
+
       - name: Publish to Dockerhub
         uses: elgohr/Publish-Docker-Github-Action@master
         with:
@@ -86,4 +92,4 @@ jobs:
           username: hatamiarash7
           password: ${{ secrets.DOCKERHUB_TOKEN }}
           dockerfile: Dockerfile
-          tag_semver: true
+          tags: "latest,${{ steps.version_env.outputs.version }}"
