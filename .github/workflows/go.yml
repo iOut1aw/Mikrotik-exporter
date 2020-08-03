@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    name: Build
+    name: Build & Publish binaries
     if: "!contains(github.event.head_commit.message, '[skip-ci]')"
     runs-on: ubuntu-latest
     steps:
@@ -53,3 +53,27 @@ jobs:
           go get github.com/tcnksm/ghr
           gox -os="linux freebsd netbsd" -arch="amd64 arm arm64 386" -parallel=8 -ldflags "${{ env.LDFLAGS }}" -output "dist/mikrotik-exporter_{{.OS}}_{{.Arch}}"
           ghr -t ${{ github.token }} -u ${{ github.actor }} -r Mikrotik-Exporter -replace ${{ steps.version_env.outputs.version }} dist/
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: binaries
+          path: dist/
+
+  docker:
+    name: Build & Publish Docker image
+    if: "!contains(github.event.head_commit.message, '[skip-ci]')"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: binaries
+          path: dist/
+
+      - name: Display binary list
+        run: ls -R
+        working-directory: dist/
