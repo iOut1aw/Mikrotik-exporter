@@ -35,17 +35,15 @@ Check [Configure](https://github.com/hatamiarash7/Mikrotik-Exporter#configure) s
 
 ### Docker
 
-There is a simple Docker image that you can use it on your host / stack :
+There is a simple Docker image that you can use it on your host / stack.
 
 ```bash
 docker pull hatamiarash7/mikrotik-exporter:1.2.2
 ```
 
-#### Run
-
 You can use this image in two ways :
 
-##### Single device
+#### Single device
 
 ```bash
 docker-compose -f docker-compose-single.yml up -d
@@ -57,7 +55,7 @@ Or using `docker run` :
 docker run -e DEVICE=home -e ADDRESS=192.168.1.4 -e USER=prometheus -e PASSWORD=changeme -p 9436:9436 hatamiarash7/mikrotik-exporter:1.2
 ```
 
-##### Multiple device
+#### Multiple device
 
 To monitor multiple devices in your network you should create a `config.yml` file :
 
