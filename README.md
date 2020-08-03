@@ -15,21 +15,37 @@ You should create a user on the device that has API and read-only access :
 /user add name=prometheus group=prometheus password=changeme
 ```
 
-## Install
+## Usage
+
+You can use generated binaries or a simple container to export metrics from your device(s)
+
+### Binaries
+
+Download the appropriate version of your operating system and architecture from [Release page](https://github.com/hatamiarash7/Mikrotik-Exporter/releases) and :
+
+```bash
+# Use config file
+./mikrotik-exporter_linux_amd64 --config-file=config.yml
+
+# Single device
+./mikrotik-exporter_linux_amd64 --address=192.168.1.4 --device=home --user=prometheus --password=changeme
+```
+
+Check [Configure](https://github.com/hatamiarash7/Mikrotik-Exporter#configure) section for more options.
+
+### Docker
 
 There is a simple Docker image that you can use it on your host / stack :
 
 ```bash
-docker pull hatamiarash7/mikrotik-exporter:1.2
-// or
-docker pull registry.gitlab.com/hatamiarash7/mikrotik-exporter:1.2
+docker pull hatamiarash7/mikrotik-exporter:1.2.2
 ```
 
-## Run
+#### Run
 
 You can use this image in two ways :
 
-#### Single device
+##### Single device
 
 ```bash
 docker-compose -f docker-compose-single.yml up -d
@@ -41,7 +57,7 @@ Or using `docker run` :
 docker run -e DEVICE=home -e ADDRESS=192.168.1.4 -e USER=prometheus -e PASSWORD=changeme -p 9436:9436 hatamiarash7/mikrotik-exporter:1.2
 ```
 
-#### Multiple device
+##### Multiple device
 
 To monitor multiple devices in your network you should create a `config.yml` file :
 
@@ -83,13 +99,12 @@ Use this one : [Mikrotik Dashboard - Prometheus](https://grafana.com/grafana/das
 ## Configure
 
 There is some options and features that you can use them to configure your devices.  
-**IMPORTANT : You can only use this options in `config.yml`**
 
 | Option      | Description                                             | Default  |
 | ----------- | ------------------------------------------------------- | -------- |
-| address     | address of the device to monitor                        |
-| config-file | config file to load                                     |
-| device      | single device to monitor ( name )                       |
+| address     | address of the device to monitor                        |          |
+| config-file | config file to load                                     |          |
+| device      | single device to monitor ( name )                       |          |
 | insecure    | skips verification of server certificate when using TLS | false    |
 | log-format  | logformat text or json                                  | json     |
 | log-level   | log level                                               | info     |
