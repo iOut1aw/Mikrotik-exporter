@@ -58,7 +58,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: binaries
-          path: dist/
+          path: dist/mikrotik-exporter_linux_amd64
 
   docker:
     name: Build & Publish Docker image
@@ -73,8 +73,17 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: binaries
-          path: dist/
+          path: dist/mikrotik-exporter_linux_amd64
 
       - name: Display binary list
         run: ls -R
         working-directory: dist/
+
+      - name: Publish to Dockerhub
+        uses: elgohr/Publish-Docker-Github-Action@master
+        with:
+          name: hatamiarash7/mikrotik-exporter
+          username: hatamiarash7
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          dockerfile: Dockerfile
+          tag_semver: true
