@@ -1,7 +1,7 @@
+FROM --platform=$BUILDPLATFORM debian:9.12-slim
+
 ARG TARGETPLATFORM
 ARG BUILDPLATFORM
-
-FROM --platform=$BUILDPLATFORM debian:9.12-slim
 
 RUN if [ "$TARGETPLATFORM" == "linux/amd64" ]; \
     then export ARCH=amd64; \
