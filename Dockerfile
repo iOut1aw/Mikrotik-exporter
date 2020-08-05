@@ -4,21 +4,22 @@ ARG TARGETPLATFORM
 ARG BUILDPLATFORM
 
 RUN if [ "$TARGETPLATFORM" == "linux/amd64" ]; \
-    then export ARCH=amd64; \
+    then export ARCH="amd64"; \
     elif [ "$TARGETPLATFORM" == "linux/arm/v7" ]; \
-    then export ARCH=arm; \
+    then export ARCH="arm"; \
     lif [ "$TARGETPLATFORM" == "linux/arm64" ]; \
-    then export ARCH=arm64; \
+    then export ARCH="arm64"; \
     lif [ "$TARGETPLATFORM" == "linux/386" ]; \
-    then export ARCH=386; \
-    fi 
+    then export ARCH="386"; \
+    fi
 
 ARG ARCH
 ENV BINARY=$ARCH
 
 RUN echo "I am running on $BUILDPLATFORM"
 RUN echo "Building for $TARGETPLATFORM"
-RUN echo "Binary is $BINARY"
+RUN echo $ARCH
+RUN echo $BINARY
 
 EXPOSE 9436
 
