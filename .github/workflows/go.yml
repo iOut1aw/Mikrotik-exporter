@@ -58,7 +58,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: binaries
-          path: dist/mikrotik-exporter_linux_amd64
+          path: dist/mikrotik-exporter_linux_*
 
   docker:
     name: Build & Publish Docker image
@@ -73,7 +73,7 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: binaries
-          path: dist/mikrotik-exporter_linux_amd64
+          path: dist/
 
       - name: Display binary list
         run: ls -R
@@ -85,11 +85,52 @@ jobs:
         with:
           path: .version
 
-      - name: Publish to Dockerhub
-        uses: elgohr/Publish-Docker-Github-Action@master
+      - name: Prepare
+        id: prepare
+        run: |
+          DOCKER_IMAGE=hatamiarash7/mikrotik-exporter
+          DOCKER_PLATFORMS=linux/amd64,linux/arm/v7,linux/arm64,linux/386
+          VERSION=${{ steps.version_env.outputs.version }}
+          TAGS="--tag ${DOCKER_IMAGE}:${VERSION} --tag ${DOCKER_IMAGE}:latest"
+
+          echo ::set-output name=docker_image::${DOCKER_IMAGE}
+          echo ::set-output name=version::${VERSION}
+          echo ::set-output name=buildx_args::--platform ${DOCKER_PLATFORMS} \
+            --build-arg VERSION=${VERSION} \
+            --build-arg BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ') \
+            --build-arg VCS_REF=${GITHUB_SHA::8} \
+            ${TAGS} --file Dockerfile .
+
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: crazy-max/ghaction-docker-buildx@v3
         with:
-          name: hatamiarash7/mikrotik-exporter
-          username: hatamiarash7
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-          dockerfile: Dockerfile
-          tags: "latest,${{ steps.version_env.outputs.version }}"
+          buildx-version: latest
+          qemu-version: latest
+
+      - name: Docker Buildx (build)
+        run: |
+          docker buildx build --output "type=image,push=false" ${{ steps.prepare.outputs.buildx_args }}
+
+      - name: Docker Login
+        if: success() && github.event_name != 'pull_request'
+        env:
+          DOCKER_USERNAME: ${{ github.actor }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKERHUB_TOKEN }}
+        run: |
+          echo "${{ env.DOCKER_PASSWORD }}" | docker login --username "${{ env.DOCKER_USERNAME }}" --password-stdin
+
+      - name: Docker Buildx (push)
+        if: success() && github.event_name != 'pull_request'
+        run: |
+          docker buildx build --output "type=image,push=true" ${{ steps.prepare.outputs.buildx_args }}
+
+      - name: Docker Check Manifest
+        if: always() && github.event_name != 'pull_request'
+        run: |
+          docker run --rm mplatform/mquery ${{ steps.prepare.outputs.docker_image }}:${{ steps.prepare.outputs.version }}
+
+      - name: Clear
+        if: always() && github.event_name != 'pull_request'
+        run: |
+          rm -f ${HOME}/.docker/config.json

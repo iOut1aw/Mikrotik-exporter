@@ -1,10 +1,12 @@
-FROM debian:9.12-slim
+ARG ARCH=amd64
+
+FROM ${ARCH}/debian:9.12-slim
 
 EXPOSE 9436
 
 COPY scripts/start.sh /app/
 
-COPY dist/mikrotik-exporter_linux_amd64 /app/mikrotik-exporter
+COPY dist/mikrotik-exporter_linux_${ARCH} /app/mikrotik-exporter
 
 RUN chmod 755 /app/*
 
