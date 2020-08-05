@@ -14,6 +14,8 @@ RUN if [ "$TARGETPLATFORM" == "linux/amd64" ]; \
     else echo "Unknown ARCH" \
     fi 
 
+ARG ARCH
+
 RUN echo "I am running on $BUILDPLATFORM"
 RUN echo "Building for $TARGETPLATFORM"
 RUN echo "Binary is $ARCH"
