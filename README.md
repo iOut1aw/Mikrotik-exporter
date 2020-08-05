@@ -38,7 +38,7 @@ Check [Configure](https://github.com/hatamiarash7/Mikrotik-Exporter#configure) s
 There is a simple Docker image that you can use it on your host / stack.
 
 ```bash
-docker pull hatamiarash7/mikrotik-exporter:1.2.2
+docker pull hatamiarash7/mikrotik-exporter:latest
 ```
 
 You can use this image in two ways :
@@ -52,7 +52,7 @@ docker-compose -f docker-compose-single.yml up -d
 Or using `docker run` :
 
 ```bash
-docker run -e DEVICE=home -e ADDRESS=192.168.1.4 -e USER=prometheus -e PASSWORD=changeme -p 9436:9436 hatamiarash7/mikrotik-exporter:1.2
+docker run -e DEVICE=home -e ADDRESS=192.168.1.4 -e USER=prometheus -e PASSWORD=changeme -p 9436:9436 hatamiarash7/mikrotik-exporter:latest
 ```
 
 #### Multiple device

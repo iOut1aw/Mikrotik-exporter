@@ -1,8 +1,8 @@
-version: "2"
+version: "3"
 
 services:
   exporter:
-    image: hatamiarash7/mikrotik-exporter:1.2
+    image: hatamiarash7/mikrotik-exporter:latest
     container_name: mikrotik-exporter
     restart: unless-stopped
     volumes:

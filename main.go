@@ -65,7 +65,7 @@ func main() {
 
 	log.Info("Welcome to Mikrotik Prometheus Exporter")
 
-	log.Info("Version: 1.2")
+	log.Info("Version: 1.2.3")
 
 	c, err := loadConfig()
 	if err != nil {
