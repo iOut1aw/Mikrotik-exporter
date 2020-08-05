@@ -11,20 +11,20 @@ RUN if [ "$TARGETPLATFORM" == "linux/amd64" ]; \
     then export ARCH=arm64; \
     lif [ "$TARGETPLATFORM" == "linux/386" ]; \
     then export ARCH=386; \
-    else echo "Unknown ARCH" \
     fi 
 
 ARG ARCH
+ENV BINARY=$ARCH
 
 RUN echo "I am running on $BUILDPLATFORM"
 RUN echo "Building for $TARGETPLATFORM"
-RUN echo "Binary is $ARCH"
+RUN echo "Binary is $BINARY"
 
 EXPOSE 9436
 
 COPY scripts/start.sh /app/
 
-COPY dist/mikrotik-exporter_linux_${ARCH} /app/mikrotik-exporter
+COPY dist/mikrotik-exporter_linux_${BINARY} /app/mikrotik-exporter
 
 RUN chmod 755 /app/*
 
