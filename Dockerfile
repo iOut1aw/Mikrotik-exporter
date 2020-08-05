@@ -1,5 +1,7 @@
 ARG TARGETPLATFORM
 
+RUN echo "I am running on $BUILDPLATFORM, building for $TARGETPLATFORM" > /log
+
 FROM ${TARGETPLATFORM}/debian:9.12-slim
 
 EXPOSE 9436
