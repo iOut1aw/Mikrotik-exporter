@@ -1,8 +1,9 @@
 ARG TARGETPLATFORM
 
-RUN echo "I am running on $BUILDPLATFORM, building for $TARGETPLATFORM" > /log
+# FROM ${TARGETPLATFORM}/debian:9.12-slim
+FROM amd64/debian:9.12-slim
 
-FROM ${TARGETPLATFORM}/debian:9.12-slim
+RUN echo "I am running on $BUILDPLATFORM, building for $TARGETPLATFORM" > /log
 
 EXPOSE 9436
 
