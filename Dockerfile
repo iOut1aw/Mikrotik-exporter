@@ -8,7 +8,7 @@ EXPOSE 9436
 
 COPY scripts/start.sh /app/
 
-COPY dist/mikrotik-exporter_linux_$BINARY_ARCH /app/mikrotik-exporter
+COPY dist/mikrotik-exporter_linux_${BINARY_ARCH} /app/mikrotik-exporter
 
 RUN chmod 755 /app/*
 
