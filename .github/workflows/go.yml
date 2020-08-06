@@ -6,6 +6,9 @@ on:
   pull_request:
     branches: [master]
 
+env:
+  IMAGE_NAME: mikrotik-exporter
+
 jobs:
   build:
     name: Build & Publish binaries
@@ -51,14 +54,14 @@ jobs:
         run: |
           go get github.com/mitchellh/gox
           go get github.com/tcnksm/ghr
-          gox -os="linux freebsd netbsd" -arch="amd64 arm arm64 386" -parallel=8 -ldflags "${{ env.LDFLAGS }}" -output "dist/mikrotik-exporter_{{.OS}}_{{.Arch}}"
-          ghr -t ${{ github.token }} -u ${{ github.actor }} -r Mikrotik-Exporter -replace ${{ steps.version_env.outputs.version }} dist/
+          gox -os="linux freebsd netbsd" -arch="amd64 arm arm64 386" -parallel=8 -ldflags "${{ env.LDFLAGS }}" -output "dist/${{ env.IMAGE_NAME }}_{{.OS}}_{{.Arch}}"
+          ghr -t ${{ github.token }} -u ${{ github.actor }} -r ${{ env.IMAGE_NAME }} -replace ${{ steps.version_env.outputs.version }} dist/
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
         with:
           name: binaries
-          path: dist/mikrotik-exporter_linux_*
+          path: dist/${{ env.IMAGE_NAME }}_linux_*
 
   docker:
     name: Build & Publish Docker image
@@ -88,21 +91,35 @@ jobs:
       - name: Prepare
         run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login --username "${{ github.actor }}" --password-stdin
 
-      - name: Docker build
+      - name: Push to Dockerhub
         run: |
-          docker build -t hatamiarash7/mikrotik-exporter:amd64 --build-arg BASE_ARCH=amd64 --build-arg BINARY_ARCH=amd64 .
-          docker build -t hatamiarash7/mikrotik-exporter:arm32v7 --build-arg BASE_ARCH=arm32v7 --build-arg BINARY_ARCH=arm .
-          docker build -t hatamiarash7/mikrotik-exporter:arm64v8 --build-arg BASE_ARCH=arm64v8 --build-arg BINARY_ARCH=arm64 .
-          docker build -t hatamiarash7/mikrotik-exporter:i386 --build-arg BASE_ARCH=i386 --build-arg BINARY_ARCH=386 .
-          docker push hatamiarash7/mikrotik-exporter:amd64
-          docker push hatamiarash7/mikrotik-exporter:arm32v7
-          docker push hatamiarash7/mikrotik-exporter:arm64v8
-          docker push hatamiarash7/mikrotik-exporter:i386
+          docker build -t ${{ github.actor }}/${{ env.IMAGE_NAME }}:amd64 --build-arg BASE_ARCH=amd64 --build-arg BINARY_ARCH=amd64 .
+          docker build -t ${{ github.actor }}/${{ env.IMAGE_NAME }}:arm32v7 --build-arg BASE_ARCH=arm32v7 --build-arg BINARY_ARCH=arm .
+          docker build -t ${{ github.actor }}/${{ env.IMAGE_NAME }}:arm64v8 --build-arg BASE_ARCH=arm64v8 --build-arg BINARY_ARCH=arm64 .
+          docker build -t ${{ github.actor }}/${{ env.IMAGE_NAME }}:i386 --build-arg BASE_ARCH=i386 --build-arg BINARY_ARCH=386 .
+          docker push ${{ github.actor }}/${{ env.IMAGE_NAME }}:amd64
+          docker push ${{ github.actor }}/${{ env.IMAGE_NAME }}:arm32v7
+          docker push ${{ github.actor }}/${{ env.IMAGE_NAME }}:arm64v8
+          docker push ${{ github.actor }}/${{ env.IMAGE_NAME }}:i386
           export DOCKER_CLI_EXPERIMENTAL=enabled
-          docker manifest create hatamiarash7/mikrotik-exporter:latest hatamiarash7/mikrotik-exporter:amd64 hatamiarash7/mikrotik-exporter:arm32v7 hatamiarash7/mikrotik-exporter:arm64v8 hatamiarash7/mikrotik-exporter:i386
-          docker manifest annotate hatamiarash7/mikrotik-exporter:latest hatamiarash7/mikrotik-exporter:arm32v7 --os linux --arch arm
-          docker manifest annotate hatamiarash7/mikrotik-exporter:latest hatamiarash7/mikrotik-exporter:arm64v8 --os linux --arch arm64 --variant armv8
-          docker manifest push hatamiarash7/mikrotik-exporter:latest
+          docker manifest create ${{ github.actor }}/${{ env.IMAGE_NAME }}:latest ${{ github.actor }}/${{ env.IMAGE_NAME }}:amd64 ${{ github.actor }}/${{ env.IMAGE_NAME }}:arm32v7 ${{ github.actor }}/${{ env.IMAGE_NAME }}:arm64v8 ${{ github.actor }}/${{ env.IMAGE_NAME }}:i386
+          docker manifest annotate ${{ github.actor }}/${{ env.IMAGE_NAME }}:latest ${{ github.actor }}/${{ env.IMAGE_NAME }}:arm32v7 --os linux --arch arm
+          docker manifest annotate ${{ github.actor }}/${{ env.IMAGE_NAME }}:latest ${{ github.actor }}/${{ env.IMAGE_NAME }}:arm64v8 --os linux --arch arm64 --variant armv8
+          docker manifest push ${{ github.actor }}/${{ env.IMAGE_NAME }}:latest
+
+      - name: Push to Github
+        run: |
+          IMAGE_ID=docker.pkg.github.com/${{ github.repository }}/$IMAGE_NAME
+          # Change all uppercase to lowercase
+          IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
+          # Strip git ref prefix from version
+          VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+          # Strip "v" prefix from tag name
+          [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
+          # Use Docker `latest` tag convention
+          [ "$VERSION" == "master" ] && VERSION=latest
+          docker build --tag $IMAGE_ID:$VERSION .
+          docker push $IMAGE_ID:$VERSION
 
       - name: Clear
         run: |
