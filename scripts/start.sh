@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 if [ ! -x /app/mikrotik-exporter ]; then
   chmod 755 /app/mikrotik-exporter
