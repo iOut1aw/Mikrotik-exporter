@@ -93,10 +93,10 @@ jobs:
 
       - name: Push to Dockerhub
         run: |
-          docker build -t ${{ github.actor }}/${{ env.IMAGE_NAME }}:amd64 --build-arg BASE_ARCH=amd64 --build-arg BINARY_ARCH=amd64 .
-          docker build -t ${{ github.actor }}/${{ env.IMAGE_NAME }}:arm32v7 --build-arg BASE_ARCH=arm32v7 --build-arg BINARY_ARCH=arm .
-          docker build -t ${{ github.actor }}/${{ env.IMAGE_NAME }}:arm64v8 --build-arg BASE_ARCH=arm64v8 --build-arg BINARY_ARCH=arm64 .
-          docker build -t ${{ github.actor }}/${{ env.IMAGE_NAME }}:i386 --build-arg BASE_ARCH=i386 --build-arg BINARY_ARCH=386 .
+          docker build -t ${{ github.actor }}/${{ env.IMAGE_NAME }}:amd64 --build-arg BASE_ARCH=amd64 --build-arg BINARY_ARCH=amd64 --file Dockerfile .
+          docker build -t ${{ github.actor }}/${{ env.IMAGE_NAME }}:arm32v7 --build-arg BASE_ARCH=arm32v7 --build-arg BINARY_ARCH=arm  --file Dockerfile.arm .
+          docker build -t ${{ github.actor }}/${{ env.IMAGE_NAME }}:arm64v8 --build-arg BASE_ARCH=arm64v8 --build-arg BINARY_ARCH=arm64 --file Dockerfile.arm .
+          docker build -t ${{ github.actor }}/${{ env.IMAGE_NAME }}:i386 --build-arg BASE_ARCH=i386 --build-arg BINARY_ARCH=386 --file Dockerfile .
           docker push ${{ github.actor }}/${{ env.IMAGE_NAME }}:amd64
           docker push ${{ github.actor }}/${{ env.IMAGE_NAME }}:arm32v7
           docker push ${{ github.actor }}/${{ env.IMAGE_NAME }}:arm64v8
