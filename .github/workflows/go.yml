@@ -118,7 +118,7 @@ jobs:
           [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
           # Use Docker `latest` tag convention
           [ "$VERSION" == "master" ] && VERSION=latest
-          docker build --tag $IMAGE_ID:$VERSION .
+          docker build --tag $IMAGE_ID:$VERSION --build-arg BASE_ARCH=amd64 --build-arg BINARY_ARCH=amd64 .
           docker push $IMAGE_ID:$VERSION
 
       - name: Clear
