@@ -8,7 +8,7 @@ It's a Prometheus exporter for mikrotik devices
 
 ## Prerequisites
 
-You should create a user on the device that has API and read-only access :
+You should create a user on the device that has `api` and `read` access :
 
 ```mikrotik
 /user group add name=prometheus policy=api,read,winbox
@@ -35,7 +35,7 @@ Check [Configure](https://github.com/hatamiarash7/Mikrotik-Exporter#configure) s
 
 ### Docker
 
-There is a simple Docker image that you can use it on your host / stack.
+There is a simple Docker image that you can use it on your host / stack :
 
 ```bash
 docker pull hatamiarash7/mikrotik-exporter:latest
@@ -73,8 +73,6 @@ devices:
 features:
   bgp: true
   dhcp: true
-  dhcpl: true
-  routes: true
 ```
 
 Then :
