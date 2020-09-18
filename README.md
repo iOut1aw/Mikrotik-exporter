@@ -1,6 +1,6 @@
 # Mikrotik Prometheus Exporter
 
-![Go](https://github.com/hatamiarash7/Mikrotik-Exporter/workflows/Go/badge.svg?branch=master) ![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/hatamiarash7/Mikrotik-Exporter) [![GitHub license](https://img.shields.io/github/license/hatamiarash7/Mikrotik-Exporter)](https://github.com/hatamiarash7/Mikrotik-Exporter/blob/master/LICENSE) ![Docker Image Size (latest by date)](https://img.shields.io/docker/image-size/hatamiarash7/mikrotik-exporter) ![Docker Image Version (latest by date)](https://img.shields.io/docker/v/hatamiarash7/mikrotik-exporter?sort=date)
+![Go](https://github.com/hatamiarash7/Mikrotik-Exporter/workflows/Go/badge.svg?branch=master) ![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/hatamiarash7/Mikrotik-Exporter) [![GitHub license](https://img.shields.io/github/license/hatamiarash7/Mikrotik-Exporter)](https://github.com/hatamiarash7/Mikrotik-Exporter/blob/master/LICENSE) ![Docker Image Size (latest by date)](https://img.shields.io/docker/image-size/hatamiarash7/mikrotik-exporter) ![Docker Pulls](https://img.shields.io/docker/pulls/hatamiarash7/mikrotik-exporter)
 
 ![banner](banner.jpg)
 
