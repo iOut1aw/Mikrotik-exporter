@@ -383,7 +383,7 @@ func (c *collector) connect(d *config.Device) (*routeros.Client, error) {
 		return nil, fmt.Errorf("RouterOS: /login: invalid ret (challenge) hex string received: %s", err)
 	}
 
-	r, err = client.Run("/login", "=name="+d.User, "=response="+challengeResponse(b, d.Password))
+	_, err = client.Run("/login", "=name="+d.User, "=response="+challengeResponse(b, d.Password))
 	if err != nil {
 		return nil, err
 	}
