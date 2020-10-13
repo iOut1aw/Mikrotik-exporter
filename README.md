@@ -1,7 +1,7 @@
 # Mikrotik Prometheus Exporter
 
 ![Go](https://github.com/hatamiarash7/Mikrotik-Exporter/workflows/Go/badge.svg?branch=master) ![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/hatamiarash7/Mikrotik-Exporter) [![GitHub license](https://img.shields.io/github/license/hatamiarash7/Mikrotik-Exporter)](https://github.com/hatamiarash7/Mikrotik-Exporter/blob/master/LICENSE) ![Docker Image Size (latest by date)](https://img.shields.io/docker/image-size/hatamiarash7/mikrotik-exporter) ![Docker Pulls](https://img.shields.io/docker/pulls/hatamiarash7/mikrotik-exporter)  
-![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=hatamiarash7_Mikrotik-Exporter&metric=ncloc) ![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=hatamiarash7_Mikrotik-Exporter&metric=alert_status) ![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=hatamiarash7_Mikrotik-Exporter&metric=reliability_rating)
+![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=hatamiarash7_Mikrotik-Exporter&metric=ncloc) ![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=hatamiarash7_Mikrotik-Exporter&metric=alert_status) ![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=hatamiarash7_Mikrotik-Exporter&metric=reliability_rating) ![Total alerts](https://img.shields.io/lgtm/alerts/g/hatamiarash7/Mikrotik-Exporter.svg?logo=lgtm&logoWidth=18)
 
 ![banner](banner.jpg)
 
