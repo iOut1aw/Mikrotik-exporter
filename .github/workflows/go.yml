@@ -137,6 +137,19 @@ jobs:
           docker build --tag $IMAGE_ID:$VERSION --build-arg BASE_ARCH=amd64 --build-arg BINARY_ARCH=amd64 .
           docker push $IMAGE_ID:$VERSION
 
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: $IMAGE_ID:$VERSION
+          format: "template"
+          template: "@/contrib/sarif.tpl"
+          output: "trivy-results.sarif"
+
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v1
+        with:
+          sarif_file: "trivy-results.sarif"
+
       - name: Clear
         run: |
           rm -f ${HOME}/.docker/config.json
