@@ -122,21 +122,6 @@ jobs:
           docker build --tag $IMAGE_ID:$VERSION --build-arg BASE_ARCH=amd64 --build-arg BINARY_ARCH=amd64 .
           docker push $IMAGE_ID:$VERSION
 
-      - name: Push to Canister
-        run: |
-          echo "${{ secrets.CANISTER_PASSWORD }}" | docker login cloud.canister.io:5000 -u ${{ github.actor }} --password-stdin
-          IMAGE_ID=cloud.canister.io:5000/${{ github.actor }}/$IMAGE_NAME
-          # Change all uppercase to lowercase
-          IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
-          # Strip git ref prefix from version
-          VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
-          # Strip "v" prefix from tag name
-          [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
-          # Use Docker `latest` tag convention
-          [ "$VERSION" == "master" ] && VERSION=latest
-          docker build --tag $IMAGE_ID:$VERSION --build-arg BASE_ARCH=amd64 --build-arg BINARY_ARCH=amd64 .
-          docker push $IMAGE_ID:$VERSION
-
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
         with:
