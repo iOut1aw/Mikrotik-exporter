@@ -88,7 +88,7 @@ Open [http://localhost:9436/metrics](http://localhost:9436/metrics)
 
 ## Dashboard
 
-Use this one : [Mikrotik Dashboard - Prometheus](https://grafana.com/grafana/dashboards/12055)
+You can use this [Grafana](https://grafana.com) dashboard to visualize metrics : [Mikrotik Dashboard - Prometheus](https://grafana.com/grafana/dashboards/12055)
 
 ![image](https://grafana.com/api/dashboards/12055/images/7865/image)
 ![image](https://grafana.com/api/dashboards/12055/images/7864/image)
