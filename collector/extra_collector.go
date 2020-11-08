@@ -1,6 +1,8 @@
 package collector
 
 import (
+	"strings"
+
 	"github.com/prometheus/client_golang/prometheus"
 	log "github.com/sirupsen/logrus"
 	"gopkg.in/routeros.v2/proto"
@@ -43,7 +45,7 @@ func (c *extraCollector) collect(ctx *collectorContext) error {
 }
 
 func (c *extraCollector) fetch(ctx *collectorContext) ([]*proto.Sentence, error) {
-	reply, err := ctx.client.Run("/system/routerboard/get")
+	reply, err := ctx.client.Run("/system/routerboard/print", "=.proplist="+strings.Join(c.props, ","))
 	if err != nil {
 		log.WithFields(log.Fields{
 			"device": ctx.device.Name,
@@ -51,7 +53,6 @@ func (c *extraCollector) fetch(ctx *collectorContext) ([]*proto.Sentence, error)
 		}).Error("error fetching Extra metrics")
 		return nil, err
 	}
-
 	return reply.Re, nil
 }
 
@@ -63,8 +64,6 @@ func (c *extraCollector) collectMetric(ctx *collectorContext, re *proto.Sentence
 	firmwareType := re.Map["firmware-type"]
 	model := re.Map["model"]
 	serialNumber := re.Map["serial-number"]
-
-	log.Info(serialNumber)
 
 	ctx.ch <- prometheus.MustNewConstMetric(c.descriptions, prometheus.CounterValue, v, ctx.device.Name, ctx.device.Address, currentFirmware, factoryFirmware, firmwareType, model, serialNumber)
 }
