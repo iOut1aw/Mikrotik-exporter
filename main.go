@@ -224,7 +224,7 @@ func collectorOptions() []collector.Option {
 	}
 
 	if *withMonitor || cfg.Features.Monitor {
-		opts = append(opts, collector.Monitor())
+		opts = append(opts, collector.WithMonitor())
 
 	}
 

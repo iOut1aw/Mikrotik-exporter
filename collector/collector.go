@@ -140,7 +140,7 @@ func WithWlanIF() Option {
 }
 
 // WithMonitor enables ethernet monitor collector metrics
-func Monitor() Option {
+func WithMonitor() Option {
 	return func(c *collector) {
 		c.collectors = append(c.collectors, newMonitorCollector())
 	}
