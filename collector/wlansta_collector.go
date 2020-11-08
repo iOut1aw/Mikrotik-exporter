@@ -98,6 +98,7 @@ func (c *wlanSTACollector) collectMetricForProperty(property, iface, mac string,
 
 func (c *wlanSTACollector) collectMetricForTXRXCounters(property, iface, mac string, re *proto.Sentence, ctx *collectorContext) {
 	tx, rx, err := splitStringToFloats(re.Map[property])
+
 	if err != nil {
 		log.WithFields(log.Fields{
 			"device":   ctx.device.Name,
@@ -107,8 +108,10 @@ func (c *wlanSTACollector) collectMetricForTXRXCounters(property, iface, mac str
 		}).Error("error parsing wlan station metric value")
 		return
 	}
-	desc_tx := c.descriptions["tx_"+property]
-	desc_rx := c.descriptions["rx_"+property]
-	ctx.ch <- prometheus.MustNewConstMetric(desc_tx, prometheus.CounterValue, tx, ctx.device.Name, ctx.device.Address, iface, mac)
-	ctx.ch <- prometheus.MustNewConstMetric(desc_rx, prometheus.CounterValue, rx, ctx.device.Name, ctx.device.Address, iface, mac)
+
+	descTx := c.descriptions["tx_"+property]
+	descRx := c.descriptions["rx_"+property]
+
+	ctx.ch <- prometheus.MustNewConstMetric(descTx, prometheus.CounterValue, tx, ctx.device.Name, ctx.device.Address, iface, mac)
+	ctx.ch <- prometheus.MustNewConstMetric(descRx, prometheus.CounterValue, rx, ctx.device.Name, ctx.device.Address, iface, mac)
 }

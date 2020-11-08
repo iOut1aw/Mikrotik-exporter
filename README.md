@@ -127,6 +127,7 @@ There is some options and features that you can use them to configure your devic
 | with-wlanif  | retrieves wlan interface metrics          | false   |
 | with-monitor | retrieves ethernet interface monitor info | false   |
 | with-ipsec   | retrieves ipsec metrics                   | false   |
+| with-extra   | retrieves extra metrics                   | false   |
 
 You can see a complex example of `config.yml` :
 
