@@ -168,6 +168,13 @@ func WithIpsec() Option {
 	}
 }
 
+// WithExtra enables ipsec metrics
+func WithExtra() Option {
+	return func(c *collector) {
+		c.collectors = append(c.collectors, newExtraCollector())
+	}
+}
+
 // Option applies options to collector
 type Option func(*collector)
 
