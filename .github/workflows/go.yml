@@ -38,7 +38,7 @@ jobs:
 
       - name: Read version
         id: version_env
-        uses: falti/dotenv-action@v0.2.4
+        uses: falti/dotenv-action@v0.2.5
         with:
           path: .version
 
@@ -84,7 +84,7 @@ jobs:
 
       - name: Read version
         id: version_env
-        uses: falti/dotenv-action@v0.2.4
+        uses: falti/dotenv-action@v0.2.5
         with:
           path: .version
 
