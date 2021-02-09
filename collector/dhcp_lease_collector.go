@@ -2,11 +2,17 @@ package collector
 
 import (
 	"strings"
+	"regexp"
 
 	"github.com/prometheus/client_golang/prometheus"
 	log "github.com/sirupsen/logrus"
 	"gopkg.in/routeros.v2/proto"
 )
+
+func stripRegex(in string) string {
+    reg, _ := regexp.Compile("[^a-zA-Z0-9 ]+")
+    return reg.ReplaceAllString(in, "")
+}
 
 type dhcpLeaseCollector struct {
 	props        []string
@@ -64,7 +70,7 @@ func (c *dhcpLeaseCollector) collectMetric(ctx *collectorContext, re *proto.Sent
 	status := re.Map["status"]
 	expiresafter := re.Map["expires-after"]
 	activeaddress := re.Map["active-address"]
-	hostname := re.Map["host-name"]
+	hostname := stripRegex(re.Map["host-name"])
 
 	ctx.ch <- prometheus.MustNewConstMetric(c.descriptions, prometheus.CounterValue, v, ctx.device.Name, ctx.device.Address, activemacaddress, status, expiresafter, activeaddress, hostname)
 }
