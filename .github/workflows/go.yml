@@ -108,6 +108,7 @@ jobs:
           docker manifest annotate ${{ secrets.DOCKER_PORNHUB_LOGIN }}/${{ env.IMAGE_NAME }}:latest ${{ secrets.DOCKER_PORNHUB_LOGIN }}/${{ env.IMAGE_NAME }}:arm32v7 --os linux --arch arm
           docker manifest annotate ${{ secrets.DOCKER_PORNHUB_LOGIN }}/${{ env.IMAGE_NAME }}:latest ${{ secrets.DOCKER_PORNHUB_LOGIN }}/${{ env.IMAGE_NAME }}:arm64v8 --os linux --arch arm64 --variant armv8
           docker manifest push ${{ secrets.DOCKER_PORNHUB_LOGIN }}/${{ env.IMAGE_NAME }}:latest
+          docker manifest push ${{ secrets.DOCKER_PORNHUB_LOGIN }}/${{ env.IMAGE_NAME }}:${{ env.GITHUB_SHA }}
 
       - name: Push to Github
         run: |

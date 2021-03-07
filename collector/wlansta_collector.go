@@ -21,8 +21,8 @@ func newWlanSTACollector() routerOSCollector {
 }
 
 func (c *wlanSTACollector) init() {
-	c.props = []string{"interface", "mac-address", "signal-to-noise", "signal-strength-ch0", "packets", "bytes", "frames"}
-	labelNames := []string{"name", "address", "interface", "mac_address"}
+	c.props = []string{"interface", "comment", "mac-address", "signal-to-noise", "signal-strength-ch0", "packets", "bytes", "frames"}
+	labelNames := []string{"name", "address", "interface", "mac_address", "comment"}
 	c.descriptions = make(map[string]*prometheus.Desc)
 	for _, p := range c.props[:len(c.props)-3] {
 		c.descriptions[p] = descriptionForPropertyName("wlan_station", p, labelNames)
@@ -68,16 +68,17 @@ func (c *wlanSTACollector) fetch(ctx *collectorContext) ([]*proto.Sentence, erro
 func (c *wlanSTACollector) collectForStat(re *proto.Sentence, ctx *collectorContext) {
 	iface := re.Map["interface"]
 	mac := re.Map["mac-address"]
+	comment := re.Map["comment"]
 
-	for _, p := range c.props[2 : len(c.props)-3] {
-		c.collectMetricForProperty(p, iface, mac, re, ctx)
+	for _, p := range c.props[3 : len(c.props)-3] {
+		c.collectMetricForProperty(p, iface, mac, comment, re, ctx)
 	}
 	for _, p := range c.props[len(c.props)-3:] {
-		c.collectMetricForTXRXCounters(p, iface, mac, re, ctx)
+		c.collectMetricForTXRXCounters(p, iface, mac, comment, re, ctx)
 	}
 }
 
-func (c *wlanSTACollector) collectMetricForProperty(property, iface, mac string, re *proto.Sentence, ctx *collectorContext) {
+func (c *wlanSTACollector) collectMetricForProperty(property, iface, mac string, comment string, re *proto.Sentence, ctx *collectorContext) {
 	if re.Map[property] == "" {
 		return
 	}
@@ -93,10 +94,10 @@ func (c *wlanSTACollector) collectMetricForProperty(property, iface, mac string,
 	}
 
 	desc := c.descriptions[property]
-	ctx.ch <- prometheus.MustNewConstMetric(desc, prometheus.GaugeValue, v, ctx.device.Name, ctx.device.Address, iface, mac)
+	ctx.ch <- prometheus.MustNewConstMetric(desc, prometheus.GaugeValue, v, ctx.device.Name, ctx.device.Address, iface, mac, comment)
 }
 
-func (c *wlanSTACollector) collectMetricForTXRXCounters(property, iface, mac string, re *proto.Sentence, ctx *collectorContext) {
+func (c *wlanSTACollector) collectMetricForTXRXCounters(property, iface, mac string, comment string, re *proto.Sentence, ctx *collectorContext) {
 	tx, rx, err := splitStringToFloats(re.Map[property])
 
 	if err != nil {
@@ -112,6 +113,6 @@ func (c *wlanSTACollector) collectMetricForTXRXCounters(property, iface, mac str
 	descTx := c.descriptions["tx_"+property]
 	descRx := c.descriptions["rx_"+property]
 
-	ctx.ch <- prometheus.MustNewConstMetric(descTx, prometheus.CounterValue, tx, ctx.device.Name, ctx.device.Address, iface, mac)
-	ctx.ch <- prometheus.MustNewConstMetric(descRx, prometheus.CounterValue, rx, ctx.device.Name, ctx.device.Address, iface, mac)
+	ctx.ch <- prometheus.MustNewConstMetric(descTx, prometheus.CounterValue, tx, ctx.device.Name, ctx.device.Address, iface, mac, comment)
+	ctx.ch <- prometheus.MustNewConstMetric(descRx, prometheus.CounterValue, rx, ctx.device.Name, ctx.device.Address, iface, mac, comment)
 }
