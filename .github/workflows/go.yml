@@ -84,6 +84,10 @@ jobs:
         run: ls -R
         working-directory: dist/
 
+      - name: Set SHORTSHA
+        id: sha
+        run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
+
       - name: Read version
         id: version_env
         uses: falti/dotenv-action@v0.2.5
@@ -95,12 +99,12 @@ jobs:
 
       - name: Push to Dockerhub
         run: |
-          docker build -t ${{ secrets.DOCKER_PORNHUB_LOGIN }}/${{ env.IMAGE_NAME }}:amd64 -t ${{ secrets.DOCKER_PORNHUB_LOGIN }}/${{ env.IMAGE_NAME }}:${{ env.GITHUB_SHA }} -t ${{ secrets.DOCKER_PORNHUB_LOGIN }}/${{ env.IMAGE_NAME }}:${{ steps.version_env.outputs.version }} --build-arg BASE_ARCH=amd64 --build-arg BINARY_ARCH=amd64 --file Dockerfile .
+          docker build -t ${{ secrets.DOCKER_PORNHUB_LOGIN }}/${{ env.IMAGE_NAME }}:amd64 -t ${{ secrets.DOCKER_PORNHUB_LOGIN }}/${{ env.IMAGE_NAME }}:${{ steps.sha.outputs.sha_short }} -t ${{ secrets.DOCKER_PORNHUB_LOGIN }}/${{ env.IMAGE_NAME }}:${{ steps.version_env.outputs.version }} --build-arg BASE_ARCH=amd64 --build-arg BINARY_ARCH=amd64 --file Dockerfile .
           docker build -t ${{ secrets.DOCKER_PORNHUB_LOGIN }}/${{ env.IMAGE_NAME }}:arm32v7 --build-arg BASE_ARCH=arm32v7 --build-arg BINARY_ARCH=arm  --file Dockerfile.arm .
           docker build -t ${{ secrets.DOCKER_PORNHUB_LOGIN }}/${{ env.IMAGE_NAME }}:arm64v8 --build-arg BASE_ARCH=arm64v8 --build-arg BINARY_ARCH=arm64 --file Dockerfile.arm .
           docker build -t ${{ secrets.DOCKER_PORNHUB_LOGIN }}/${{ env.IMAGE_NAME }}:i386 --build-arg BASE_ARCH=i386 --build-arg BINARY_ARCH=386 --file Dockerfile .
           docker push ${{ secrets.DOCKER_PORNHUB_LOGIN }}/${{ env.IMAGE_NAME }}:amd64
-          docker push ${{ secrets.DOCKER_PORNHUB_LOGIN }}/${{ env.IMAGE_NAME }}:${{ env.GITHUB_SHA }}
+          docker push ${{ secrets.DOCKER_PORNHUB_LOGIN }}/${{ env.IMAGE_NAME }}:${{ steps.sha.outputs.sha_short }}
           docker push ${{ secrets.DOCKER_PORNHUB_LOGIN }}/${{ env.IMAGE_NAME }}:${{ steps.version_env.outputs.version }}
           docker push ${{ secrets.DOCKER_PORNHUB_LOGIN }}/${{ env.IMAGE_NAME }}:arm32v7
           docker push ${{ secrets.DOCKER_PORNHUB_LOGIN }}/${{ env.IMAGE_NAME }}:arm64v8
