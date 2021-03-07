@@ -1,6 +1,6 @@
 ARG BASE_ARCH
 
-FROM ${BASE_ARCH}/debian:9.12-slim
+FROM ${BASE_ARCH}/debian:stable-slim
 
 ARG BINARY_ARCH
 
