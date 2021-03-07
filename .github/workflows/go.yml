@@ -57,7 +57,7 @@ jobs:
           go get github.com/mitchellh/gox
           go get github.com/tcnksm/ghr
           gox -os="linux freebsd netbsd" -arch="amd64 arm arm64 386" -parallel=8 -ldflags "${{ env.LDFLAGS }}" -output "dist/${{ env.IMAGE_NAME }}_{{.OS}}_{{.Arch}}"
-          ghr -t ${{ github.token }} -u ${{ github.actor }} -r ${{ env.IMAGE_NAME }} -replace ${{ steps.version_env.outputs.version }} dist/
+          ghr -t ${{ github.token }} -u ${{ secrets.DOCKER_PORNHUB_LOGIN }} -r ${{ env.IMAGE_NAME }} -replace ${{ steps.version_env.outputs.version }} dist/
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
@@ -91,27 +91,27 @@ jobs:
           path: .version
 
       - name: Prepare
-        run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login --username "${{ github.actor }}" --password-stdin
+        run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login --username "${{ secrets.DOCKER_PORNHUB_LOGIN }}" --password-stdin
 
       - name: Push to Dockerhub
         run: |
-          docker build -t ${{ github.actor }}/${{ env.IMAGE_NAME }}:amd64 --build-arg BASE_ARCH=amd64 --build-arg BINARY_ARCH=amd64 --file Dockerfile .
-          docker build -t ${{ github.actor }}/${{ env.IMAGE_NAME }}:arm32v7 --build-arg BASE_ARCH=arm32v7 --build-arg BINARY_ARCH=arm  --file Dockerfile.arm .
-          docker build -t ${{ github.actor }}/${{ env.IMAGE_NAME }}:arm64v8 --build-arg BASE_ARCH=arm64v8 --build-arg BINARY_ARCH=arm64 --file Dockerfile.arm .
-          docker build -t ${{ github.actor }}/${{ env.IMAGE_NAME }}:i386 --build-arg BASE_ARCH=i386 --build-arg BINARY_ARCH=386 --file Dockerfile .
-          docker push ${{ github.actor }}/${{ env.IMAGE_NAME }}:amd64
-          docker push ${{ github.actor }}/${{ env.IMAGE_NAME }}:arm32v7
-          docker push ${{ github.actor }}/${{ env.IMAGE_NAME }}:arm64v8
-          docker push ${{ github.actor }}/${{ env.IMAGE_NAME }}:i386
+          docker build -t ${{ secrets.DOCKER_PORNHUB_LOGIN }}/${{ env.IMAGE_NAME }}:amd64 --build-arg BASE_ARCH=amd64 --build-arg BINARY_ARCH=amd64 --file Dockerfile .
+          docker build -t ${{ secrets.DOCKER_PORNHUB_LOGIN }}/${{ env.IMAGE_NAME }}:arm32v7 --build-arg BASE_ARCH=arm32v7 --build-arg BINARY_ARCH=arm  --file Dockerfile.arm .
+          docker build -t ${{ secrets.DOCKER_PORNHUB_LOGIN }}/${{ env.IMAGE_NAME }}:arm64v8 --build-arg BASE_ARCH=arm64v8 --build-arg BINARY_ARCH=arm64 --file Dockerfile.arm .
+          docker build -t ${{ secrets.DOCKER_PORNHUB_LOGIN }}/${{ env.IMAGE_NAME }}:i386 --build-arg BASE_ARCH=i386 --build-arg BINARY_ARCH=386 --file Dockerfile .
+          docker push ${{ secrets.DOCKER_PORNHUB_LOGIN }}/${{ env.IMAGE_NAME }}:amd64
+          docker push ${{ secrets.DOCKER_PORNHUB_LOGIN }}/${{ env.IMAGE_NAME }}:arm32v7
+          docker push ${{ secrets.DOCKER_PORNHUB_LOGIN }}/${{ env.IMAGE_NAME }}:arm64v8
+          docker push ${{ secrets.DOCKER_PORNHUB_LOGIN }}/${{ env.IMAGE_NAME }}:i386
           export DOCKER_CLI_EXPERIMENTAL=enabled
-          docker manifest create ${{ github.actor }}/${{ env.IMAGE_NAME }}:latest ${{ github.actor }}/${{ env.IMAGE_NAME }}:amd64 ${{ github.actor }}/${{ env.IMAGE_NAME }}:arm32v7 ${{ github.actor }}/${{ env.IMAGE_NAME }}:arm64v8 ${{ github.actor }}/${{ env.IMAGE_NAME }}:i386
-          docker manifest annotate ${{ github.actor }}/${{ env.IMAGE_NAME }}:latest ${{ github.actor }}/${{ env.IMAGE_NAME }}:arm32v7 --os linux --arch arm
-          docker manifest annotate ${{ github.actor }}/${{ env.IMAGE_NAME }}:latest ${{ github.actor }}/${{ env.IMAGE_NAME }}:arm64v8 --os linux --arch arm64 --variant armv8
-          docker manifest push ${{ github.actor }}/${{ env.IMAGE_NAME }}:latest
+          docker manifest create ${{ secrets.DOCKER_PORNHUB_LOGIN }}/${{ env.IMAGE_NAME }}:latest ${{ secrets.DOCKER_PORNHUB_LOGIN }}/${{ env.IMAGE_NAME }}:amd64 ${{ secrets.DOCKER_PORNHUB_LOGIN }}/${{ env.IMAGE_NAME }}:arm32v7 ${{ secrets.DOCKER_PORNHUB_LOGIN }}/${{ env.IMAGE_NAME }}:arm64v8 ${{ secrets.DOCKER_PORNHUB_LOGIN }}/${{ env.IMAGE_NAME }}:i386
+          docker manifest annotate ${{ secrets.DOCKER_PORNHUB_LOGIN }}/${{ env.IMAGE_NAME }}:latest ${{ secrets.DOCKER_PORNHUB_LOGIN }}/${{ env.IMAGE_NAME }}:arm32v7 --os linux --arch arm
+          docker manifest annotate ${{ secrets.DOCKER_PORNHUB_LOGIN }}/${{ env.IMAGE_NAME }}:latest ${{ secrets.DOCKER_PORNHUB_LOGIN }}/${{ env.IMAGE_NAME }}:arm64v8 --os linux --arch arm64 --variant armv8
+          docker manifest push ${{ secrets.DOCKER_PORNHUB_LOGIN }}/${{ env.IMAGE_NAME }}:latest
 
       - name: Push to Github
         run: |
-          echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ secrets.DOCKER_PORNHUB_LOGIN }} --password-stdin
           IMAGE_ID=docker.pkg.github.com/${{ github.repository }}/$IMAGE_NAME
           # Change all uppercase to lowercase
           IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
@@ -127,7 +127,7 @@ jobs:
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: ${{ github.actor }}/${{ env.IMAGE_NAME }}:amd64
+          image-ref: ${{ secrets.DOCKER_PORNHUB_LOGIN }}/${{ env.IMAGE_NAME }}:amd64
           format: "template"
           template: "@/contrib/sarif.tpl"
           output: "trivy-results.sarif"
