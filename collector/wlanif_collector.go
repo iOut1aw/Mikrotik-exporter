@@ -11,8 +11,10 @@ import (
 )
 
 type wlanIFCollector struct {
-	props        []string
-	descriptions map[string]*prometheus.Desc
+	props                 []string
+	descriptions          map[string]*prometheus.Desc
+	propsFrequency        []string
+	descriptionsFrequency map[string]*prometheus.Desc
 }
 
 func newWlanIFCollector() routerOSCollector {
@@ -28,6 +30,13 @@ func (c *wlanIFCollector) init() {
 	for _, p := range c.props {
 		c.descriptions[p] = descriptionForPropertyName("wlan_interface", p, labelNames)
 	}
+	c.propsFrequency = []string{"name", "comment", "ssid", "frequency"}
+	labelNamesFrequency := []string{"name", "address", "ssid", "comment"}
+	c.descriptionsFrequency = make(map[string]*prometheus.Desc)
+	for _, p := range c.propsFrequency[1:] {
+		c.descriptionsFrequency[p] = descriptionForPropertyName("wlan_interface", p, labelNamesFrequency)
+	}
+
 }
 
 func (c *wlanIFCollector) describe(ch chan<- *prometheus.Desc) {
@@ -37,37 +46,27 @@ func (c *wlanIFCollector) describe(ch chan<- *prometheus.Desc) {
 }
 
 func (c *wlanIFCollector) collect(ctx *collectorContext) error {
-	names, err := c.fetchInterfaceNames(ctx)
-	if err != nil {
-		return err
-	}
-
-	for _, n := range names {
-		err := c.collectForInterface(n, ctx)
-		if err != nil {
-			return err
-		}
-	}
-
-	return nil
+	return c.fetchInterfaceNames(ctx)
 }
 
-func (c *wlanIFCollector) fetchInterfaceNames(ctx *collectorContext) ([]string, error) {
-	reply, err := ctx.client.Run("/interface/wireless/print", "?disabled=false", "=.proplist=name")
+func (c *wlanIFCollector) fetchInterfaceNames(ctx *collectorContext) error {
+	reply, err := ctx.client.Run("/interface/wireless/print", "?disabled=false", "=.proplist="+strings.Join(c.propsFrequency, ","))
 	if err != nil {
 		log.WithFields(log.Fields{
 			"device": ctx.device.Name,
 			"error":  err,
 		}).Error("error fetching wireless interface names")
-		return nil, err
+		return err
 	}
 
-	names := []string{}
 	for _, re := range reply.Re {
-		names = append(names, re.Map["name"])
+		c.collectForStatFrequency(re, ctx)
+		err := c.collectForInterface(re.Map["name"], ctx)
+		if err != nil {
+			return err
+		}
 	}
-
-	return names, nil
+	return nil
 }
 
 func (c *wlanIFCollector) collectForInterface(iface string, ctx *collectorContext) error {
@@ -88,6 +87,33 @@ func (c *wlanIFCollector) collectForInterface(iface string, ctx *collectorContex
 	}
 
 	return nil
+}
+
+func (c *wlanIFCollector) collectForStatFrequency(re *proto.Sentence, ctx *collectorContext) {
+	ssid := re.Map["ssid"]
+	comment := re.Map["comment"]
+
+	for _, p := range c.propsFrequency[3:] {
+		c.collectMetricForPropertyFrequency(p, ssid, comment, re, ctx)
+	}
+}
+
+func (c *wlanIFCollector) collectMetricForPropertyFrequency(property, ssid, comment string, re *proto.Sentence, ctx *collectorContext) {
+	desc := c.descriptionsFrequency[property]
+	if value := re.Map[property]; value != "" {
+		v, err := strconv.ParseFloat(value, 64)
+		if err != nil {
+			log.WithFields(log.Fields{
+				"device":    ctx.device.Name,
+				"interface": ssid,
+				"property":  property,
+				"value":     value,
+				"error":     err,
+			}).Error("error parsing interface metric value")
+			return
+		}
+		ctx.ch <- prometheus.MustNewConstMetric(desc, prometheus.CounterValue, v, ctx.device.Name, ctx.device.Address, ssid, comment)
+	}
 }
 
 func (c *wlanIFCollector) collectMetricForProperty(property, iface string, re *proto.Sentence, ctx *collectorContext) {

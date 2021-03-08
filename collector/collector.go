@@ -175,13 +175,6 @@ func WithExtra() Option {
 	}
 }
 
-// WithWireless enables ipsec metrics
-func WithWireless() Option {
-	return func(c *collector) {
-		c.collectors = append(c.collectors, newWirelessCollector())
-	}
-}
-
 // Option applies options to collector
 type Option func(*collector)
 

@@ -51,7 +51,6 @@ var (
 	withMonitor = flag.Bool("with-monitor", false, "retrieves ethernet interface monitor info")
 	withIpsec   = flag.Bool("with-ipsec", false, "retrieves ipsec metrics")
 	withExtra   = flag.Bool("with-extra", false, "retrieves extra metrics")
-	withWlan    = flag.Bool("with-wireless", false, "retrieves extra metrics")
 
 	cfg *config.Config
 )
@@ -244,10 +243,6 @@ func collectorOptions() []collector.Option {
 
 	if *tls {
 		opts = append(opts, collector.WithTLS(*insecure))
-	}
-
-	if *withWlan || cfg.Features.Wlan {
-		opts = append(opts, collector.WithWireless())
 	}
 
 	return opts
