@@ -1,8 +1,8 @@
 package collector
 
 import (
-	"strings"
 	"regexp"
+	"strings"
 
 	"github.com/prometheus/client_golang/prometheus"
 	log "github.com/sirupsen/logrus"
@@ -10,8 +10,8 @@ import (
 )
 
 func stripRegex(in string) string {
-    reg, _ := regexp.Compile("[^a-zA-Z0-9 ]+")
-    return reg.ReplaceAllString(in, "")
+	reg, _ := regexp.Compile("[^a-zA-Z0-9 \\./+-]")
+	return reg.ReplaceAllString(in, "")
 }
 
 type dhcpLeaseCollector struct {
